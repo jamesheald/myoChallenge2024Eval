@@ -5,7 +5,7 @@ gymnasium
 numpy
 matplotlib
 tabulate
-
+stable_baselines3
 
 # Add your own dependencies here
 # awesome_dependency==0.99
