@@ -78,7 +78,7 @@ policy = Policy(rc)
 shape = get_custom_observation(rc, custom_obs_keys).shape
 rc.set_output_keys(custom_obs_keys)
 
-path = '/'.join(os.path.realpath('MyMyoChallengePolicy.pkl').split('/')[:-1])
+path = '/'.join(os.path.realpath('MyMyoChallengePolicy').split('/')[:-1])
 print(path)
 model = SAC.load(os.path.join(path,'agent','MyMyoChallengePolicy'))
 print('MANIPULATION agent: policy loaded')
