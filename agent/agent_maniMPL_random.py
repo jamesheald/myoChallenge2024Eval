@@ -80,7 +80,7 @@ rc.set_output_keys(custom_obs_keys)
 
 path = '/'.join(os.path.realpath('MyMyoChallengePolicy.pkl').split('/')[:-1])
 print(path)
-model = SAC.load(os.path.join(path,'agent','MyMyoChallengePolicy.pkl'))
+model = SAC.load(os.path.join(path,'agent','MyMyoChallengePolicy'))
 print('MANIPULATION agent: policy loaded')
 
 flat_completed = None
