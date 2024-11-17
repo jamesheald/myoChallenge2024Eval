@@ -27,7 +27,7 @@ class evaluator_environment:
         self.env = gym.make(self.environment, 
                             obs_keys=self.obs_output_keys, 
                             normalize_act=self.normalize_act)
-        print("NORMALIZE_ACT:"self.normalize_act)
+        print("NORMALIZE_ACT:", self.normalize_act)
 
     def get_output_keys(self):
         print(self.env.obs_keys)
