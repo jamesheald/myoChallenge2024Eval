@@ -78,6 +78,9 @@ policy = Policy(rc)
 shape = get_custom_observation(rc, custom_obs_keys).shape
 rc.set_output_keys(custom_obs_keys)
 
+custom_environment_varibles = {'obs_keys':custom_obs_keys, 'normalize_act':False}
+rc.set_environment_keys(custom_environment_varibles)
+
 path = '/'.join(os.path.realpath('MyMyoChallengePolicy').split('/')[:-1])
 print(path)
 model = SAC.load(os.path.join(path,'MyMyoChallengePolicy'))
