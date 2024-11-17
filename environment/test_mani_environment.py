@@ -5,7 +5,11 @@ import sys
 import os
 import requests
 import json
-
+import sys
+sys.path.append('../')
+sys.path.append('.')
+sys.path.append("../utils")
+sys.path.append("utils")
 
 from concurrent import futures
 import time
@@ -19,6 +23,21 @@ EVALUATION_COMPLETED = False
 import myosuite
 
 class evaluator_environment:
+    # DEFAULT_OBS_KEY = ['time', 
+    #                    'myohand_qpos', 
+    #                    'myohand_qvel', 
+    #                    'pros_hand_qpos', 
+    #                    'pros_hand_qvel', 
+    #                    'object_qpos', 
+    #                    'object_qvel', 
+    #                    'start_pos', 
+    #                    'goal_pos', 
+    #                    'touching_body', 
+    #                    'act', 
+    #                    'reach_err', 
+    #                    'pass_err']
+    
+    # DEFAULT_NORMALIZE_ACT = True
     
     def __init__(self, environment="myoChallengeBimanual-v0"):
         DEFAULT_OBS_KEY = ['myohand_qpos','myohand_qvel','act','pros_hand_qpos','pros_hand_qvel','start_pos','goal_pos','object_qpos','object_qvel','touching_body','time']
@@ -26,21 +45,18 @@ class evaluator_environment:
         self.score = 0
         self.feedback = None
         self.environment = environment
-        # self.env = gym.make(environment)
         self.normalize_act = DEFAULT_NORMALIZE_ACT
-        self.obs_output_keys = DEFAULT_OBS_KEY
         self.env = gym.make(self.environment, 
                             obs_keys=self.obs_output_keys, 
                             normalize_act=self.normalize_act)
-        print("NORMALIZE_ACT:", self.normalize_act)
-
+        
     def get_output_keys(self):
         print(self.env.obs_keys)
         return self.env.obs_keys
 
     def set_output_keys(self, key_set):
         self.env = gym.make(self.environment, obs_keys=key_set)
-
+    
     def set_environment_keys(self, key_set):
         self.obs_output_keys = key_set['obs_keys'] # List
         self.normalize_act = key_set['normalize_act']
@@ -50,6 +66,7 @@ class evaluator_environment:
         self.env = gym.make(self.environment, 
                             obs_keys=self.obs_output_keys, 
                             normalize_act=self.normalize_act)
+
     def reset(self):
         return self.env.reset()
 
@@ -78,6 +95,11 @@ class Environment(evaluation_pb2_grpc.EnvironmentServicer):
     def set_output_keys(self, request, context):
         new_out_keys = unpack_for_grpc(request.SerializedEntity)
         message = pack_for_grpc(env.set_output_keys(new_out_keys))
+        return evaluation_pb2.Package(SerializedEntity=message)
+    
+    def set_environment_keys(self, request, context):
+        new_env_keys = unpack_for_grpc(request.SerializedEntity)
+        message = pack_for_grpc(env.set_environment_keys(new_env_keys))
         return evaluation_pb2.Package(SerializedEntity=message)
 
     def reset(self, request, context):
