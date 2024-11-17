@@ -32,13 +32,6 @@ if [ "$PassEvalAI" = "true" ] && [ "$PassDocker" = "true" ]; then
     pip install -r requirements/agent_random.txt
     pip install git+https://github.com/MyoHub/myosuite.git@mc24_p2
 
-    conda install -c conda-forge glew
-    conda install -c conda-forge mesalib
-    conda install -c menpo glfw3
-    conda install -c menpo osmesa
-    conda install -c anaconda patchelf
-    conda install -c conda-forge libgcrypt
-
     export PYTHONPATH="./utils/:$PYTHONPATH"
     export PYTHONPATH="./agent/:$PYTHONPATH"
     export PYTHONPATH="./environment/:$PYTHONPATH"
