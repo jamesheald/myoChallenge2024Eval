@@ -17,22 +17,7 @@ from stable_baselines3 import SAC
 """
 Define your custom observation keys here
 """
-custom_obs_keys = [
-    "time", 
-    'myohand_qpos',
-    'myohand_qvel',
-    'pros_hand_qpos',
-    'pros_hand_qvel',
-    'object_qpos',
-    'object_qvel',
-    'touching_body',
-    # 'start_pos',
-    # 'goal_pos',
-    # 'obj_pos',
-    # 'reach_err',
-    # 'pass_err',
-    # 'act',
-]
+custom_obs_keys = ['myohand_qpos','myohand_qvel','act','pros_hand_qpos','pros_hand_qvel','start_pos','goal_pos','object_qpos','object_qvel','touching_body','time']
 
 def pack_for_grpc(entity):
     return pickle.dumps(entity)
