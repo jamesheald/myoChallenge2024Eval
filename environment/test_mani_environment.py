@@ -19,11 +19,10 @@ EVALUATION_COMPLETED = False
 import myosuite
 
 class evaluator_environment:
-
-    DEFAULT_OBS_KEY = ['myohand_qpos','myohand_qvel','act','pros_hand_qpos','pros_hand_qvel','start_pos','goal_pos','object_qpos','object_qvel','touching_body','time']
-    DEFAULT_NORMALIZE_ACT = False
     
     def __init__(self, environment="myoChallengeBimanual-v0"):
+        DEFAULT_OBS_KEY = ['myohand_qpos','myohand_qvel','act','pros_hand_qpos','pros_hand_qvel','start_pos','goal_pos','object_qpos','object_qvel','touching_body','time']
+        DEFAULT_NORMALIZE_ACT = False
         self.score = 0
         self.feedback = None
         self.environment = environment
