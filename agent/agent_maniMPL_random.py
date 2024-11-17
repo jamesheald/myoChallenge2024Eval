@@ -1,6 +1,12 @@
 import os
 import pickle
 import time
+import sys
+
+sys.path.append('../')
+sys.path.append('.')
+sys.path.append("../utils")
+sys.path.append('utils')
 
 import copy
 import numpy as np
