@@ -30,7 +30,7 @@ Define your custom observation keys here
 """
 custom_obs_keys = ['myohand_qpos','myohand_qvel','act','pros_hand_qpos','pros_hand_qvel','start_pos','goal_pos','object_qpos','object_qvel','touching_body','time']
 
-def load_policy(env_id, model_id):
+def load_policy(model_id):
 
     path = '/'.join(os.path.realpath('MPL_only').split('/')[:-1])
     print(path)
@@ -46,6 +46,8 @@ def load_policy(env_id, model_id):
     print(path)
     learned_params = pickle.load(open(os.path.join(path,'params_' + model_id + '.pkl'),"rb"))
     print('MANIPULATION agent: params loaded')
+
+    env_id = 'myoChallengeBimanual-v0'
 
     ordered_custom_obs_keys = ['myohand_qpos','myohand_qvel','act','pros_hand_qpos','pros_hand_qvel','start_pos','goal_pos','object_qpos','object_qvel','touching_body','time']
     q_to_control = ['flexion', 'pro_sup', 'deviation', 'elbow_flexion', 'elv_angle', 'shoulder_elv', 'shoulder_rot']
@@ -142,9 +144,8 @@ rc.set_environment_keys(custom_environment_varibles)
 # model = final_policy.load(os.path.join(path,'MyMyoChallengePolicy'))
 # print('MANIPULATION agent: policy loaded')
 
-env_id = 'myoChallengeBimanual-v0'
 model_id = 'james_1'
-model = load_policy(env_id, model_id)
+model = load_policy(model_id)
 
 flat_completed = None
 trial = 0
