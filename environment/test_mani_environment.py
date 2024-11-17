@@ -22,7 +22,7 @@ class evaluator_environment:
     
     def __init__(self, environment="myoChallengeBimanual-v0"):
         DEFAULT_OBS_KEY = ['myohand_qpos','myohand_qvel','act','pros_hand_qpos','pros_hand_qvel','start_pos','goal_pos','object_qpos','object_qvel','touching_body','time']
-        DEFAULT_NORMALIZE_ACT = False
+        # DEFAULT_NORMALIZE_ACT = False
         self.score = 0
         self.feedback = None
         self.environment = environment
@@ -31,8 +31,8 @@ class evaluator_environment:
         self.obs_output_keys = DEFAULT_OBS_KEY
         self.env = gym.make(self.environment, 
                             obs_keys=self.obs_output_keys, 
-                            normalize_act=self.normalize_act)
-        print("NORMALIZE_ACT:", self.normalize_act)
+                            normalize_act=False)
+        # print("NORMALIZE_ACT:", self.normalize_act)
 
     def get_output_keys(self):
         print(self.env.obs_keys)
