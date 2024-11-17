@@ -4,6 +4,11 @@ ENV PYTHONUNBUFFERED 1
 ADD ./agent /
 ADD ./utils /
 ADD requirements/agent_random.txt /
+RUN apt-get update && \
+    apt-get install -y \
+    build-essential \
+    cmake \
+    libglfw3 libglfw3-dev
 RUN pip install --upgrade pip
 RUN pip install -r agent_random.txt
 CMD [ "python", "agent_maniMPL_random.py" ]
