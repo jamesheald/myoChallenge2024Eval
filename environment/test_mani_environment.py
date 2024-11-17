@@ -36,6 +36,15 @@ class evaluator_environment:
     def set_output_keys(self, key_set):
         self.env = gym.make(self.environment, obs_keys=key_set)
 
+    def set_environment_keys(self, key_set):
+        self.obs_output_keys = key_set['obs_keys'] # List
+        self.normalize_act = key_set['normalize_act']
+        self._reInitEnvironment()
+
+    def _reInitEnvironment(self):
+        self.env = gym.make(self.environment, 
+                            obs_keys=self.obs_output_keys, 
+                            normalize_act=self.normalize_act)
     def reset(self):
         return self.env.reset()
 
