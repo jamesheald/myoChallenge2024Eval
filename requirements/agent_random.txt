@@ -9,6 +9,7 @@ tabulate
 # Add your own dependencies here
 stable_baselines3==2.4.0a7
 flax==0.8.5
+--find-links https://storage.googleapis.com/jax-releases/jax_releases.html
 jax[cuda12]
 optax==0.2.2
 sbx-rl==0.17.0
