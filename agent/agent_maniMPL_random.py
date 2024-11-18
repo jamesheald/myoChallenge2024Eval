@@ -72,9 +72,6 @@ def load_policy(model_id):
     max_episode_steps = 1000
     reward_type='dense'
 
-    env = SubprocVecEnv([make_env(env_id, run*num_cpu+i, run, reward_type, normalize_act, control_variables, obs_variables, ordered_custom_obs_keys, max_episode_steps, reward_id, max_num_mode_switches, True) for i in range(num_cpu)], start_method='fork')
-    env.training=False # don't update normalization statistics
-
     env_fn = make_env(env_id, run, run, normalize_act, control_variables, obs_variables, ordered_custom_obs_keys, max_episode_steps, reward_id, max_num_mode_switches, False) 
 
     model = final_policy("MlpPolicy", 
