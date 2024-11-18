@@ -38,7 +38,7 @@ jobs:
         docker compose -f docker-compose-ManiAgentRandom.yml build
 
     - name: Push to evalai
-      run: evalai push mani_agent_random:latest --phase myochallenge2024-maniphase2-2373 --private
+      run: evalai push mani_agent_random:latest --phase myochallenge2024-maniphase2-2373 --public
 
 
 
