@@ -1,5 +1,5 @@
 # import copy
-from typing import List, Callable, Dict, Optional, Sequence, Tuple, Union, no_type_check
+from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union, no_type_check
 
 import flax.linen as nn
 import jax
@@ -31,21 +31,38 @@ class BaseJaxPolicy(BasePolicy):
     @staticmethod
     @jax.jit
     # def sample_action(actor_state, obervations, key):
-        # dist = actor_state.apply_fn(actor_state.params, obervations)
-        # action = dist.sample(seed=key)
-        # return action
-    def sample_action(actor_params, actor_state, observations, key, synergies_state, dynamics_state):
+    # dist = actor_state.apply_fn(actor_state.params, obervations)
+    # action = dist.sample(seed=key)
+    # return action
+    def sample_action(
+        actor_params, actor_state, observations, key, synergies_state, dynamics_state
+    ):
         # key, subkey = jax.random.split(key)
         # squash_controls_fn = lambda u: jnp.concatenate([nn.sigmoid(u[...,:63]*5.),nn.tanh(u[...,63:]*3.)],axis=-1)
         # _, _, mu_u_source, A, explore_var, A_complement, _, _, _, _, _ = synergies_state.apply_fn(synergies_state.params, observations[...,:216], dynamics_state, key, False, jnp.zeros((observations.shape[0],1)), squash_controls_fn)
         # key, subkey = jax.random.split(key)
         # base_dist, explore_dist, A, mu_u_source, A_complement, squash_controls_fn = actor_state.apply_fn(actor_params, observations, synergies_state, dynamics_state, subkey,  mu_u_source, A, explore_var, A_complement, deterministic=False)
         key, subkey = jax.random.split(key)
-        base_dist, explore_dist, A, mu_u_source, A_complement, squash_controls_fn = actor_state.apply_fn(actor_params, observations, synergies_state, dynamics_state, subkey, deterministic=False)
+        base_dist, explore_dist, A, mu_u_source, A_complement, squash_controls_fn = (
+            actor_state.apply_fn(
+                actor_params,
+                observations,
+                synergies_state,
+                dynamics_state,
+                subkey,
+                deterministic=False,
+            )
+        )
         key, subkey = jax.random.split(key)
         actor_z_actions = base_dist.sample(seed=subkey)
         exploration_noise = explore_dist.sample(seed=key)
-        actor_actions = squash_controls_fn((mu_u_source + jnp.einsum("...ij,...j->...i", A, actor_z_actions) + jnp.einsum("...ij,...j->...i", A_complement, exploration_noise)))
+        actor_actions = squash_controls_fn(
+            (
+                mu_u_source
+                + jnp.einsum("...ij,...j->...i", A, actor_z_actions)
+                + jnp.einsum("...ij,...j->...i", A_complement, exploration_noise)
+            )
+        )
         negative_entropy = -base_dist.entropy()
         return actor_actions, negative_entropy, explore_dist
 
@@ -54,9 +71,24 @@ class BaseJaxPolicy(BasePolicy):
     # def select_action(actor_state, obervations):
     #     return actor_state.apply_fn(actor_state.params, obervations).mode()
     def select_action(actor_state, observations, key, synergies_state, dynamics_state):
-        base_dist, explore_dist, A, mu_u_source, A_complement, squash_controls_fn = actor_state.apply_fn(actor_state.params, observations, synergies_state, dynamics_state, subkey, deterministic=True)
+        base_dist, explore_dist, A, mu_u_source, A_complement, squash_controls_fn = (
+            actor_state.apply_fn(
+                actor_state.params,
+                observations,
+                synergies_state,
+                dynamics_state,
+                subkey,
+                deterministic=True,
+            )
+        )
         actor_z_actions = base_dist.mode()
-        actor_actions = squash_controls_fn((mu_u_source + jnp.einsum("...ij,...j->...i", A, actor_z_actions) + jnp.einsum("...ij,...j->...i", A_complement, exploration_noise)))
+        actor_actions = squash_controls_fn(
+            (
+                mu_u_source
+                + jnp.einsum("...ij,...j->...i", A, actor_z_actions)
+                + jnp.einsum("...ij,...j->...i", A_complement, exploration_noise)
+            )
+        )
         return actor_actions
 
     @no_type_check
@@ -85,7 +117,9 @@ class BaseJaxPolicy(BasePolicy):
             else:
                 # Actions could be on arbitrary scale, so clip the actions to avoid
                 # out of bound error (e.g. if sampling from a Gaussian distribution)
-                actions = np.clip(actions, self.action_space.low, self.action_space.high)
+                actions = np.clip(
+                    actions, self.action_space.low, self.action_space.high
+                )
 
         # Remove batch dimension if needed
         if not vectorized_env:
@@ -93,17 +127,24 @@ class BaseJaxPolicy(BasePolicy):
 
         return actions, state
 
-    def prepare_obs(self, observation: Union[np.ndarray, Dict[str, np.ndarray]]) -> Tuple[np.ndarray, bool]:
+    def prepare_obs(
+        self, observation: Union[np.ndarray, Dict[str, np.ndarray]]
+    ) -> Tuple[np.ndarray, bool]:
         vectorized_env = False
         if isinstance(observation, dict):
             assert isinstance(self.observation_space, spaces.Dict)
             # Minimal dict support: flatten
             keys = list(self.observation_space.keys())
-            vectorized_env = is_vectorized_observation(observation[keys[0]], self.observation_space[keys[0]])
+            vectorized_env = is_vectorized_observation(
+                observation[keys[0]], self.observation_space[keys[0]]
+            )
 
             # Add batch dim and concatenate
             observation = np.concatenate(
-                [observation[key].reshape(-1, *self.observation_space[key].shape) for key in keys],
+                [
+                    observation[key].reshape(-1, *self.observation_space[key].shape)
+                    for key in keys
+                ],
                 axis=1,
             )
             # need to copy the dict as the dict in VecFrameStack will become a torch tensor
@@ -128,7 +169,9 @@ class BaseJaxPolicy(BasePolicy):
 
         if not isinstance(self.observation_space, spaces.Dict):
             assert isinstance(observation, np.ndarray)
-            vectorized_env = is_vectorized_observation(observation, self.observation_space)
+            vectorized_env = is_vectorized_observation(
+                observation, self.observation_space
+            )
             # Add batch dimension if needed
             observation = observation.reshape((-1, *self.observation_space.shape))  # type: ignore[misc]
 
@@ -187,5 +230,5 @@ class VectorCritic(nn.Module):
             dropout_rate=self.dropout_rate,
             net_arch=self.net_arch,
             activation_fn=self.activation_fn,
-        )(obs[...,self.obs_variables], action)
+        )(obs[..., self.obs_variables], action)
         return q_values

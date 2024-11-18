@@ -5,12 +5,13 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union
 import jax
 import numpy as np
 from gymnasium import spaces
-from stable_baselines3 import HerReplayBuffer
-from stable_baselines3.common.buffers import DictReplayBuffer, ReplayBuffer
-from stable_baselines3.common.noise import ActionNoise
+
 # from stable_baselines3.common.off_policy_algorithm import OffPolicyAlgorithm
 # from my_sb3_off_policy_algorithm_24 import OffPolicyAlgorithm
 from myochallenge24_my_sb3_off_policy_algorithm import OffPolicyAlgorithm
+from stable_baselines3 import HerReplayBuffer
+from stable_baselines3.common.buffers import DictReplayBuffer, ReplayBuffer
+from stable_baselines3.common.noise import ActionNoise
 from stable_baselines3.common.policies import BasePolicy
 from stable_baselines3.common.type_aliases import GymEnv, Schedule
 from stable_baselines3.common.utils import get_device
@@ -107,7 +108,9 @@ class OffPolicyAlgorithmJax(OffPolicyAlgorithm):
         # the environment when using HerReplayBuffer
         replay_buffer_kwargs = self.replay_buffer_kwargs.copy()
         if issubclass(self.replay_buffer_class, HerReplayBuffer):  # type: ignore[arg-type]
-            assert self.env is not None, "You must pass an environment when using `HerReplayBuffer`"
+            assert (
+                self.env is not None
+            ), "You must pass an environment when using `HerReplayBuffer`"
             replay_buffer_kwargs["env"] = self.env
 
         self.replay_buffer = self.replay_buffer_class(  # type: ignore[misc]
