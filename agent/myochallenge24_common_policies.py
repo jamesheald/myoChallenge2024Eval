@@ -243,15 +243,15 @@ class BaseJaxPolicy(BasePolicy):
             # actions[:,75:78] = np.ones(3)*1.6
             # actions[:,79] = np.ones(1)*1.6
 
-        if self.touching_mpl_count > 10 and self.touching_myo_count > 10 and self.phase_three==False:
+        if self.touching_mpl_count > 5 and self.touching_myo_count > 5 and self.phase_three==False:
 
             self.phase_three=True
-            self.get_target_qpos(observation, np.array([0, 0.05, 0.2]))
+            self.get_target_qpos(observation, np.array([0, 0.05, 0.25]))
 
         if np.linalg.norm(observation[0,139:143]-self.target_qpos) < 0.15 and self.phase_three and self.phase_four==False:
 
             self.phase_four=True
-            self.get_target_qpos(observation, np.array([0.05, 0.05, 0.1]))
+            self.get_target_qpos(observation, np.array([0.1, 0.05, 0.1]))
 
         if np.linalg.norm(observation[0,139:143]-self.target_qpos) < 0.15 and self.phase_three and self.phase_four and self.phase_five==False:
 
