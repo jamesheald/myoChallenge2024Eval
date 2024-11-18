@@ -75,40 +75,40 @@ class BaseJaxPolicy(BasePolicy):
         full_actions = jnp.concatenate((mu_u_source[...,:63] + jnp.einsum("...ij,...j->...i", A, actor_z_actions) + jnp.einsum("...ij,...j->...i", A_complement, exploration_noise), MLP_all_actions), axis=-1)
         actor_actions = squash_controls_fn((full_actions))
 
-        def false_fun(actor_actions):
+        # def false_fun(actor_actions):
 
-            actor_actions = actor_actions.at[63:67].set(jnp.array([0.988, 0., 1.07, 1.24]))
-            actor_actions = actor_actions.at[67:71].set(jnp.array([0.848, -.0343, 0.41, 1.47]))
-            actor_actions = actor_actions.at[71:74].set(jnp.array([0., 0., 0.]))
-            actor_actions = actor_actions.at[74].set(0.)
-            actor_actions = actor_actions.at[75:78].set(jnp.array([0.112, 0.712, 0.928]))
-            actor_actions = actor_actions.at[78].set(0.)
-            actor_actions = actor_actions.at[79].set(1.06)
+        #     actor_actions = actor_actions.at[63:67].set(jnp.array([0.988, 0., 1.07, 1.24]))
+        #     actor_actions = actor_actions.at[67:71].set(jnp.array([0.848, -.0343, 0.41, 1.47]))
+        #     actor_actions = actor_actions.at[71:74].set(jnp.array([0., 0., 0.]))
+        #     actor_actions = actor_actions.at[74].set(0.)
+        #     actor_actions = actor_actions.at[75:78].set(jnp.array([0.112, 0.712, 0.928]))
+        #     actor_actions = actor_actions.at[78].set(0.)
+        #     actor_actions = actor_actions.at[79].set(1.06)
 
-            return actor_actions
+        #     return actor_actions
 
-        def true_fun(actor_actions):
+        # def true_fun(actor_actions):
 
-            # actor_actions = actor_actions.at[:63].set(jnp.zeros(63))
-            actor_actions = actor_actions.at[63:67].set(jnp.array([0.988, 0., 1.07, 1.24])) # second element -1.15 is pillar; -0.15 is moved a little
-            actor_actions = actor_actions.at[67:71].set(jnp.array([0.848, -.0343, 0.41, 1.47])) # first element to -.25 (rotate wrist)
-            actor_actions = actor_actions.at[73:75].set(jnp.array([0., 0.]))
-            actor_actions = actor_actions.at[77].set(0.928)
-            actor_actions = actor_actions.at[78].set(0.)
-            actor_actions = actor_actions.at[79].set(1.06)
+        #     # actor_actions = actor_actions.at[:63].set(jnp.zeros(63))
+        #     actor_actions = actor_actions.at[63:67].set(jnp.array([0.988, 0., 1.07, 1.24])) # second element -1.15 is pillar; -0.15 is moved a little
+        #     actor_actions = actor_actions.at[67:71].set(jnp.array([0.848, -.0343, 0.41, 1.47])) # first element to -.25 (rotate wrist)
+        #     actor_actions = actor_actions.at[73:75].set(jnp.array([0., 0.]))
+        #     actor_actions = actor_actions.at[77].set(0.928)
+        #     actor_actions = actor_actions.at[78].set(0.)
+        #     actor_actions = actor_actions.at[79].set(1.06)
 
-            return actor_actions
+        #     return actor_actions
 
-        def conditional_actions(phase, actor_actions):
+        # def conditional_actions(phase, actor_actions):
 
-            # actor_actions = jax.lax.cond(False, true_fun, false_fun, actor_actions)
-            actor_actions = jax.lax.cond(jnp.isclose(phase,2), true_fun, false_fun, actor_actions)
+        #     # actor_actions = jax.lax.cond(False, true_fun, false_fun, actor_actions)
+        #     actor_actions = jax.lax.cond(jnp.isclose(phase,2), true_fun, false_fun, actor_actions)
 
-            return actor_actions
+        #     return actor_actions
 
-        batch_conditional_actions = jax.vmap(conditional_actions)
+        # batch_conditional_actions = jax.vmap(conditional_actions)
 
-        actor_actions = batch_conditional_actions(phase, actor_actions)
+        # actor_actions = batch_conditional_actions(phase, actor_actions)
 
         negative_entropy = -base_dist.entropy()
         return actor_actions, negative_entropy, explore_dist
@@ -232,7 +232,7 @@ class BaseJaxPolicy(BasePolicy):
             actions[:,78] = 0.
             actions[:,79] = 1.06
 
-        if self.touching_mpl_count > 0:
+        if self.touching_mpl_count > 0 or self.phase_three:
 
             actions[:,:63] = np .zeros(63)
 
