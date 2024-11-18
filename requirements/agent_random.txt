@@ -17,3 +17,4 @@ tensorflow-probability==0.24.0
 mujoco==3.1.2
 distrax==0.1.5
 myosuite==2.8.4
+glfw==1.12.0
