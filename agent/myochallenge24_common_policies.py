@@ -232,7 +232,7 @@ class BaseJaxPolicy(BasePolicy):
             actions[:,78] = 0.
             actions[:,79] = 1.06
 
-        if self.touching_mpl_count > 0:
+        if self.touching_mpl_count > 0 or self.phase_three:
 
             actions[:,:63] = np .zeros(63)
 
