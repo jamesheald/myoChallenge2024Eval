@@ -246,12 +246,12 @@ class BaseJaxPolicy(BasePolicy):
         if self.touching_mpl_count > 10 and self.touching_myo_count > 10 and self.phase_three==False:
 
             self.phase_three=True
-            self.get_target_qpos(observation, np.array([0.1, 0.05, 0.3]))
+            self.get_target_qpos(observation, np.array([0, 0.05, 0.1]))
 
         if np.linalg.norm(observation[0,139:143]-self.target_qpos) < 0.15 and self.phase_three and self.phase_four==False:
 
             self.phase_four=True
-            self.get_target_qpos(observation, np.array([0.1, 0.05, 0.05]))
+            self.get_target_qpos(observation, np.array([0., 0.05, 0.1]))
 
         if np.linalg.norm(observation[0,139:143]-self.target_qpos) < 0.15 and self.phase_three and self.phase_four and self.phase_five==False:
 
@@ -261,10 +261,12 @@ class BaseJaxPolicy(BasePolicy):
 
             actions[:,63:67] = self.target_qpos # self.get_target_qpos(observation, np.array([0., 0., 0.25]))
 
-        if self.phase_five:
+        if self.phase_four:
 
             # (rotate wrist)
             # actions[:,67] = np.ones(1)*-.25
+
+        if self.phase_five:
             
             # thumb synergy, 0-1 (1 flexed)
             actions[:,71:73] = np.ones(2)*0.
