@@ -139,7 +139,7 @@ rc.set_environment_keys(custom_environment_varibles)
 # model = final_policy.load(os.path.join(path,'MyMyoChallengePolicy'))
 # print('MANIPULATION agent: policy loaded')
 
-model_id = 'james_1'
+model_id = 'samo_2'
 model = load_policy(model_id)
 
 flat_completed = None
