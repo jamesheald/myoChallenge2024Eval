@@ -159,7 +159,7 @@ while not flat_completed:
         ################################################
         ## Replace with your trained policy.
         obs = get_custom_observation(rc, custom_obs_keys)
-        action, __ = model.predict(obs, deterministic=True)
+        action, __ = model.predict(obs, deterministic=False)
         ################################################
 
         base = rc.act_on_environment(action)
