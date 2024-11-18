@@ -70,6 +70,7 @@ def load_policy(model_id):
     max_num_mode_switches = 'one' # 'one' (switch policy mode once only) or unbounded' (switch policy mode any number of times) 
     normalize_act = False
     max_episode_steps = 1000
+    reward_type='dense'
 
     env = SubprocVecEnv([make_env(env_id, run*num_cpu+i, run, reward_type, normalize_act, control_variables, obs_variables, ordered_custom_obs_keys, max_episode_steps, reward_id, max_num_mode_switches, True) for i in range(num_cpu)], start_method='fork')
     env.training=False # don't update normalization statistics
