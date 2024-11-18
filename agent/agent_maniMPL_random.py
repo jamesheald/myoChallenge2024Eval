@@ -50,11 +50,8 @@ def load_policy(model_id):
     env_id = 'myoChallengeBimanual-v0'
 
     ordered_custom_obs_keys = ['myohand_qpos','myohand_qvel','act','pros_hand_qpos','pros_hand_qvel','start_pos','goal_pos','object_qpos','object_qvel','touching_body','time']
-    q_to_control = ['flexion', 'pro_sup', 'deviation', 'elbow_flexion', 'elv_angle', 'shoulder_elv', 'shoulder_rot']
-    env_tmp = gym.make(env_id, obs_keys=ordered_custom_obs_keys)
-    control_variables = [215 + i for i in range(2)] + [env_tmp.sim.model.joint_name2id(q) for q in q_to_control]
-    task_variables_keys = ['start_pos','goal_pos']
-    task_variables = [idx for key in task_variables_keys for idx in list(env_tmp.key_idx[key])] 
+    control_variables = [215, 216, 17, 15, 16, 14, 10, 11, 13]
+    task_variables = [191, 192, 193, 194, 195, 196]
     obs_variables = list(range(215)) ## TO USE THIS NEED TO UNCOMMENT CODE IN my_policies
 
     def make_env(env_id, seed, run, normalize_act, control_variables, obs_variables, ordered_custom_obs_keys, max_episode_steps, reward_id, max_num_mode_switches, wrap):
