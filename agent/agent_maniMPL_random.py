@@ -39,7 +39,7 @@ def load_policy(model_id):
 
     path = '/'.join(os.path.realpath('vec_stats_' + model_id).split('/')[:-1])
     print(path)
-    vec_stats = os.path.join(path,'vec_stats_' + model_id + '.pkl')
+    vec_stats = pickle.load(os.path.join(path,'vec_stats_' + model_id + '.pkl'))
     print('MANIPULATION agent: vec stats loaded')
 
     path = '/'.join(os.path.realpath('params_' + model_id).split('/')[:-1])
